@@ -5,7 +5,7 @@ const env = require("../configs/environment");
 // const { sendVerifMail, sendMails } = require("../configs/email");
 
 const MAIL_SETTINGS = {
-  host: "localHost:3001",
+  host: env.host_link,
   service: "gmail",
   port: 465,
   secure: true,
