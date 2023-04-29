@@ -1,5 +1,6 @@
 module.exports = {
   host: process.env.DB_HOST,
+  host_link: process.env.HOST,
   db: process.env.DB_NAME,
   dbPort: process.env.DB_PORT,
   user: process.env.DB_USER,
