@@ -21,7 +21,7 @@ const getAllMovies = async (req, res) => {
         const { query } = req;
         const result = await moviesModel.getAllMovies(query);
         if (result.rows.length === 0) {
-            res.status(404).json({
+            return res.status(404).json({
                 data: result.rows,
                 msg: "Data not found"
             });
@@ -32,7 +32,7 @@ const getAllMovies = async (req, res) => {
             meta,
             msg: "Get movies data"
         })
-        
+
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -54,6 +54,23 @@ const getSingleMovies = async (req, res) => {
             data: result.rows,
             msg: "Get movies data"
         });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            msg: 'Internal server error'
+        });
+    }
+}
+
+const editMovies = async (req, res) => {
+    try {
+        const { body, params } = req;
+        const result = await moviesModel.editMovies(body, params)
+        res.status(201).json({
+            data: result.rows,
+            msg: "Success update movies"
+        });
+
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -89,5 +106,6 @@ module.exports = {
     getAllMovies,
     addMovies,
     getSingleMovies,
+    editMovies,
     deleteMovies
 }

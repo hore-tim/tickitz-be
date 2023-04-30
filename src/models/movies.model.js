@@ -17,6 +17,9 @@ const addMovies = (data) => {
 const getAllMovies = (query) => {
     return new Promise((resolve, reject) => {
         let sql = `select * from movies `;
+        if(query.show === true) {
+            sql += `where release_date <= now() `
+        }
         switch (query.sort) {
             case "name_asc":
                 sql += `order by name asc `;
@@ -57,9 +60,9 @@ const getAllMovies = (query) => {
 const getMetaMovies = (query) => {
     return new Promise((resolve, reject) => {
         const sql = `select count(*) as total_movies from movies`;
-        let endpoint = `/movies`;
+        let endpoint = `/movies?`;
         if (query.sort !== undefined) {
-            endpoint += `?sort=${query.sort}&`;
+            endpoint += `sort=${query.sort}&`;
         }
         supabase.query(sql, (err, result) => {
             if (err) {
@@ -69,26 +72,26 @@ const getMetaMovies = (query) => {
             const page = Number(query.page || 1);
             const dataLimit = Number(query.limit || 10);
             const totalPage = Math.ceil(totalMovies / dataLimit);
-            switch (query.sort) {
-                case "name_asc":
-                    endpoint += `sort=name_asc&`;
-                    break;
-                case "name_desc":
-                    endpoint += `sort=name_desc&`;
-                    break;
-                case "release_asc":
-                    endpoint += `sort=release_asc&`;
-                    break;
-                case "release_desc":
-                    endpoint += `sort=release_desc&`;
-                    break;
-                case "duration_asc":
-                    endpoint += `sort=duration_asc&`;
-                    break;
-                case "duration_desc":
-                    endpoint += `sort=duration_desc&`;
-                    break;
-            }
+            // switch (query.sort) {
+            //     case "name_asc":
+            //         endpoint += `sort=name_asc&`;
+            //         break;
+            //     case "name_desc":
+            //         endpoint += `sort=name_desc&`;
+            //         break;
+            //     case "release_asc":
+            //         endpoint += `sort=release_asc&`;
+            //         break;
+            //     case "release_desc":
+            //         endpoint += `sort=release_desc&`;
+            //         break;
+            //     case "duration_asc":
+            //         endpoint += `sort=duration_asc&`;
+            //         break;
+            //     case "duration_desc":
+            //         endpoint += `sort=duration_desc&`;
+            //         break;
+            // }
             let prev = `${endpoint}limit=${dataLimit}&page=${page - 1}`;
             let next = `${endpoint}limit=${dataLimit}&page=${page + 1}`;
             if (page === 1) {
@@ -100,6 +103,7 @@ const getMetaMovies = (query) => {
             const meta = {
                 totalMovies,
                 totalPage,
+                page,
                 prev,
                 next
             }
@@ -112,6 +116,19 @@ const getMetaMovies = (query) => {
 const getSingleMovies = (params) => {
     return new Promise((resolve, reject) => {
         const sql = `select * from movies where id = $1`;
+        supabase.query(sql, [params.id], (err, result) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(result);
+        })
+    })
+}
+
+const getShowingMovies = (params) => {
+    return new Promise((resolve, reject) => {
+        const sql = `select * from movies where release_date <= now() `;
         supabase.query(sql, [params.id], (err, result) => {
             if (err) {
                 reject(err);
