@@ -30,6 +30,26 @@ const updateProfile = async (req, res) => {
   const client = await db.connect();
   try {
     await client.query("BEGIN");
+    const resultUserBio = await profileModel.updateUsers(client, req);
+    await client.query("COMMIT");
+    res.status(200).json({
+      msg: "Update Success...",
+      data: resultUserBio.rows,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      msg: "Internal Server Error...",
+    });
+  } finally {
+    client.release();
+  }
+};
+
+const updateProfileImage = async (req, res) => {
+  const client = await db.connect();
+  try {
+    await client.query("BEGIN");
     let fileLink = "";
     if (!req.file) {
       return res.status(400).json({
@@ -42,7 +62,11 @@ const updateProfile = async (req, res) => {
       const upCloud = await uploaderUsers(req, "user", fileName);
       fileLink = upCloud.data.secure_url;
     }
-    const resultUserBio = await profileModel.updateUsers(client, req, fileLink);
+    const resultUserBio = await profileModel.updateProfileImage(
+      client,
+      req,
+      fileLink
+    );
     await client.query("COMMIT");
     res.status(200).json({
       msg: "Update Success...",
@@ -96,4 +120,5 @@ module.exports = {
   getProfile,
   updateProfile,
   updatePoin,
+  updateProfileImage,
 };
