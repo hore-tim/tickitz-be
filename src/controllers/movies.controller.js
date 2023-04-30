@@ -1,6 +1,6 @@
 const moviesModel = require('../models/movies.model')
 
-const addMovies = async(req, res) => {
+const addMovies = async (req, res) => {
     try {
         const { body } = req;
         const result = await moviesModel.addMovies(body);
@@ -25,13 +25,14 @@ const getAllMovies = async (req, res) => {
                 data: result.rows,
                 msg: "Data not found"
             });
-        } else {
-            res.status(200).json({
-                data: result.rows,
-                msg: "Get movies data"
-            });
         }
-
+        const meta = await moviesModel.getMetaMovies(query);
+        res.status(200).json({
+            data: result.rows,
+            meta,
+            msg: "Get movies data"
+        })
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -40,11 +41,11 @@ const getAllMovies = async (req, res) => {
     }
 };
 
-const getSingleMovies = async(req, res) => {
+const getSingleMovies = async (req, res) => {
     try {
-        const {params} = req;
+        const { params } = req;
         const result = await moviesModel.getSingleMovies(params)
-        if(result.rows.length === 0) {
+        if (result.rows.length === 0) {
             return res.status(404).json({
                 msg: "Movies not found"
             });
@@ -61,11 +62,11 @@ const getSingleMovies = async(req, res) => {
     }
 }
 
-const deleteMovies = async(req, res) => {
+const deleteMovies = async (req, res) => {
     try {
-        const {params} = req;
+        const { params } = req;
         const result = await moviesModel.getSingleMovies(params)
-        if(result.rows.length === 0) {
+        if (result.rows.length === 0) {
             return res.status(404).json({
                 msg: "Movies not found"
             });
@@ -75,9 +76,12 @@ const deleteMovies = async(req, res) => {
             data: result.rows,
             msg: "Success delete movies"
         })
-        
+
     } catch (error) {
-        
+        console.log(error);
+        res.status(500).json({
+            msg: 'Internal server error'
+        });
     }
 }
 
