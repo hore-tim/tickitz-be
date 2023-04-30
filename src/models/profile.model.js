@@ -13,7 +13,33 @@ const getProfile = (id) => {
   });
 };
 
-const updateUsers = (client, req, fileLink) => {
+const updateUsers = (client, req) => {
+  return new Promise((resolve, reject) => {
+    let sqlQuery = "UPDATE users SET ";
+    let values = [];
+    let i = 1;
+    const body = req.body;
+    if (body.password) {
+      delete body.password;
+    }
+    for (const [key, val] of Object.entries(body)) {
+      sqlQuery += `${key} = $${i}, `;
+      values.push(val);
+      i++;
+    }
+
+    sqlQuery = sqlQuery.slice(0, -2);
+    sqlQuery += ` WHERE id = $${i} RETURNING *`;
+    values.push(req.authInfo.id);
+    console.log(sqlQuery);
+    client.query(sqlQuery, values, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+  });
+};
+
+const updateProfileImage = (client, req, fileLink) => {
   return new Promise((resolve, reject) => {
     let sqlQuery = "UPDATE users SET ";
     let values = [];
@@ -72,4 +98,5 @@ module.exports = {
   updateUsers,
   updatePoin,
   getPoin,
+  updateProfileImage,
 };

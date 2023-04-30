@@ -6,11 +6,12 @@ const memoryUpload = require("../middleware/memoryUpload");
 
 profileRouter.get("/", checkToken, profileController.getProfile);
 profileRouter.patch(
-  "/",
+  "/image",
   checkToken,
   memoryUpload.single("image"),
-  profileController.updateProfile
+  profileController.updateProfileImage
 );
+profileRouter.patch("/", checkToken, profileController.updateProfile);
 profileRouter.patch("/poin", checkToken, profileController.updatePoin);
 
 module.exports = profileRouter;
