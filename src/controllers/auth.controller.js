@@ -85,7 +85,7 @@ const register = async (req, res) => {
     }
     const verifyUrl = `${linkDirect}/${body.email}`;
     const mailoptions = {
-      from: "tickitz.tim@gmail.com",
+      from: "tickitz.hore@gmail.com",
       to: `${body.email}`,
       subject: "Verification Your Email 👻",
       html: `
