@@ -137,6 +137,26 @@ const forgot = (otp, password) => {
   });
 };
 
+const getOldPassword = (id) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = `select password from users where id = $1`;
+    db.query(sqlQuery, [id], (err, result) => {
+      if (err) reject(err);
+      resolve(result);
+    });
+  });
+};
+
+const changePassword = (newPassword, id) => {
+  return new Promise((resolve, reject) => {
+    const sqlQuery = `UPDATE users set password = $1 where id = $2`;
+    db.query(sqlQuery, [newPassword, id], (err, result) => {
+      if (err) reject(err);
+      resolve(result);
+    });
+  });
+};
+
 module.exports = {
   userVerification,
   createToken,
@@ -150,4 +170,6 @@ module.exports = {
   getOtpWithOtp,
   verify,
   cekVerify,
+  getOldPassword,
+  changePassword,
 };
