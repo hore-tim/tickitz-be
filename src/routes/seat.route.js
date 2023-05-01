@@ -1,9 +1,9 @@
-// const { Router } = require("express");
-// const seatRouter = Router();
+const { Router } = require("express");
+const seatRouter = Router();
 
-// const bookingController = require("../controllers/booking.controller");
-// const authMiddleware = require("../middleware/auth");
+const seatController = require("../controllers/seat.controller");
+const authMiddleware = require("../middleware/auth");
 
-// seatRouter.get("/", authMiddleware.checkToken, bookingController.getBooking);
+seatRouter.get("/all", authMiddleware.checkToken, seatController.getSeat);
 
-// module.exports = seatRouter;
+module.exports = seatRouter;
