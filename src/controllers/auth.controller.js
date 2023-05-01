@@ -309,6 +309,37 @@ const logOut = async (req, res) => {
   }
 };
 
+const changePassword = async (req, res) => {
+  try {
+    const { authInfo } = req;
+    const { body } = req;
+    const oldPassword = await authModels.getOldPassword(authInfo.id);
+    const isPasswordValid = await bcrypt.compare(
+      body.oldPassword,
+      oldPassword.rows[0].password
+    );
+    if (!isPasswordValid)
+      return res.status(401).json({
+        msg: "Password old Salah",
+      });
+    if (body.newPassword !== body.confirmPassword) {
+      return res.status(401).json({
+        msg: "passwords must be the same",
+      });
+    }
+    const hashedPassword = await bcrypt.hash(body.newPassword, 10);
+    await authModels.changePassword(hashedPassword, authInfo.id);
+    res.status(200).json({
+      msg: "Change Password Succes",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal Server Error",
+    });
+  }
+};
+
 module.exports = {
   login,
   register,
@@ -318,4 +349,5 @@ module.exports = {
   forgot,
   verify,
   resetPassword,
+  changePassword,
 };

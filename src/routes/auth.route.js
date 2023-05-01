@@ -18,5 +18,10 @@ authRouter.patch("/logout", authMiddleware.checkToken, authContoller.logOut);
 authRouter.patch("/otp", authContoller.createOtp);
 authRouter.patch("/forgot", authContoller.forgot);
 authRouter.patch("/reset-password/:otp", authContoller.resetPassword);
+authRouter.patch(
+  "/change-password",
+  authMiddleware.checkToken,
+  authContoller.changePassword
+);
 
 module.exports = authRouter;
