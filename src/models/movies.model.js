@@ -2,9 +2,9 @@ const supabase = require('../configs/supabase')
 
 const addMovies = (data) => {
     return new Promise((resolve, reject) => {
-        const sql = `insert into movies (name, image, category, release_date, duration, director, casts, synopsis, posted_by, created_at)
+        const sql = `insert into movies (title, image, category, release_date, duration, director, casts, synopsis, user_id, created_at)
                     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, now()) returning *`;
-        const values = [data.name, data.image, data.category, data.releaseDate, data.duration, data.director, data.casts, data.synopsis, data.userId ];
+        const values = [data.title, data.image, data.category, data.releaseDate, data.duration, data.director, data.casts, data.synopsis, data.userId ];
         supabase.query(sql, values, (err, result) => {
             if (err) {
                 return reject(err)
@@ -17,8 +17,12 @@ const addMovies = (data) => {
 const getAllMovies = (query) => {
     return new Promise((resolve, reject) => {
         let sql = `select * from movies `;
-        if(query.show === true) {
+        if(query.show && query.show === 'now') {
             sql += `where release_date <= now() `
+        }
+        if(query.show && query.show !== 'now') {
+            let showDate = query.show.split('-')
+            sql += `where date_part('month', release_date)=${showDate[1]} and date_part('year', release_date)=${showDate[0]} `
         }
         switch (query.sort) {
             case "name_asc":
@@ -63,6 +67,9 @@ const getMetaMovies = (query) => {
         let endpoint = `/movies?`;
         if (query.sort !== undefined) {
             endpoint += `sort=${query.sort}&`;
+        }
+        if (query.show !== undefined) {
+            endpoint += `show=${query.show}&`;
         }
         supabase.query(sql, (err, result) => {
             if (err) {
