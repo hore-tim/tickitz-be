@@ -103,8 +103,8 @@ const register = async (req, res) => {
     transporter.sendMail(mailoptions, async function (error, info) {
       if (error) {
         console.log(error);
-        res.status(500).json({
-          msg: "Internal Server Error",
+        return res.status(400).json({
+          msg: "Email / password invalid",
         });
       } else {
         console.log(`Email send: ${info.response}`);
