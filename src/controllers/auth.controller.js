@@ -103,7 +103,7 @@ const register = async (req, res) => {
       <p>${OTP}</p>
       <p style="margin-bottom: 30px">
         Please click
-        <a href="${verifyUrl}" style="color: red" target="_blank">here</a> to
+        <a href="${verifyUrl}" style="color: red">here</a> to
         verif your email
       </p>
     </div>
