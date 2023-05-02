@@ -12,7 +12,6 @@ const getSeat = async (req, res) => {
     );
     if (result.rows.length === 0) {
       res.status(404).json({
-        data: result.rows,
         msg: "Seat Not Found",
       });
       return;

@@ -13,5 +13,6 @@ profileRouter.patch(
 );
 profileRouter.patch("/", checkToken, profileController.updateProfile);
 profileRouter.patch("/poin", checkToken, profileController.updatePoin);
+profileRouter.patch("/delete-image", checkToken, profileController.deleteImage);
 
 module.exports = profileRouter;
