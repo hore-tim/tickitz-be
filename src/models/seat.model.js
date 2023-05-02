@@ -13,7 +13,7 @@ const getSeat = (location, cinemaName, showTime, showDate, titleMovie) => {
     AND c.name = $2
     AND t.show_time = TO_TIMESTAMP($3, 'HH24:MI:SS')::TIME 
     AND t.show_date = TO_DATE($4, 'YYYY-MM-DD')
-   and m.title = $5
+    and m.title = $5
     `;
     const values = [location, cinemaName, showTime, showDate, titleMovie];
     db.query(sqlQuery, values, (err, result) => {
