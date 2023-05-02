@@ -26,7 +26,7 @@ const login = async (req, res) => {
     // jika valid, maka buatkan jwt token
     if (result.rows.length < 1)
       return res.status(401).json({
-        msg: "Email/Password Salah",
+        msg: "Account not found",
       });
     const { id, role_id, password, phone, image } = result.rows[0];
     // compare password
