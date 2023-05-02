@@ -5,5 +5,6 @@ const seatController = require("../controllers/seat.controller");
 const authMiddleware = require("../middleware/auth");
 
 seatRouter.get("/all", authMiddleware.checkToken, seatController.getSeat);
+seatRouter.post("/order", authMiddleware.checkToken, seatController.orderSeat);
 
 module.exports = seatRouter;
