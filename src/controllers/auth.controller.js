@@ -95,14 +95,17 @@ const register = async (req, res) => {
       to: `${body.email}`,
       subject: "Verification Your Email 👻",
       html: `
-        <div
-          class="container"
-          style="max-width: 90%; margin: auto; padding-top: 20px"
-        >
-          <h2>Hi.</h2>
-          <h4>This Is Your Link Verification</h4>
-          <p>${OTP}</p>
-          <p style="margin-bottom: 30px;">Please click <a href="${verifyUrl}" style="color: red;" target="_blank">here</a> to verif your email</p>
+    <div
+      class="container"
+      style="max-width: 90%; margin: auto; padding-top: 20px">
+      <h2>Hi.</h2>
+      <h4>This Is Your Link Verification</h4>
+      <p>${OTP}</p>
+      <p style="margin-bottom: 30px">
+        Please click
+        <a href="${verifyUrl}" style="color: red" target="_blank">here</a> to
+        verif your email
+      </p>
     </div>
       `,
     };
