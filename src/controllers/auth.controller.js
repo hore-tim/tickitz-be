@@ -71,6 +71,12 @@ const register = async (req, res) => {
     const pass = body.password;
     const linkDirect = body.link_direct;
     const hashedPassword = await bcrypt.hash(pass, 10);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(body.email)) {
+      res.status(404).json({
+        msg: "Email Invalid",
+      });
+    }
     const emailFromDb = await authModels.getEmail(body);
     if (emailFromDb.rows.length === 1) {
       res.status(400).json({
@@ -181,7 +187,7 @@ const createOtp = async (req, res) => {
           style="max-width: 90%; margin: auto; padding-top: 20px"
         >
           <h2>Hi.</h2>
-          <h4>This Is Your Link Verification</h4>
+          <h4>This Is Your Otp</h4>
           <p>${OTP}</p>
           <p style="margin-bottom: 30px;">Please click <a href="${verifyUrl}" style="color: red;">here</a> to verif your email</p>
     </div>
