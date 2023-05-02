@@ -62,7 +62,13 @@ const checkRole = (req, res, next) => {
 const checkVerify = async (req, res, next) => {
   const { email } = req.body;
   const result = await authModels.cekVerify(email);
-  // console.log(result);
+  // return console.log(result);
+  // if(result.)
+  if (result.rows.length < 1) {
+    return res.status(401).json({
+      msg: "Account not found",
+    });
+  }
   if (result.rows[0].status === "Not Active") {
     return res.status(401).json({
       msg: "Please Verify Your Email",
