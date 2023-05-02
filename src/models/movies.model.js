@@ -151,6 +151,8 @@ const getShowingMovies = (params) => {
 }
 
 const editMovies = (data, params) => {
+    let id = null
+    params.id ? id = params.id : id = data.moviesId
     return new Promise((resolve, reject) => {
         const dataAvail = [];
         if (data.title != null) {
@@ -178,7 +180,7 @@ const editMovies = (data, params) => {
             dataAvail.push('synopsis=')
         }
         const dataQuery = dataAvail.map((data, i) => (`${data}$${i + 1}`)).join(`, `)
-        const rawValues = [data.title, data.image, data.category, data.releaseDate, data.duration, data.director, data.casts, data.synopsis, params.id];
+        const rawValues = [data.title, data.image, data.category, data.releaseDate, data.duration, data.director, data.casts, data.synopsis, id ];
         const values = rawValues.filter(d => d);
         let sql = `update movies set ${dataQuery} where id=$${values.length} RETURNING *`;
         console.log(sql);

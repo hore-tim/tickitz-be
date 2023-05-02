@@ -9,7 +9,7 @@ const cloudUploadMovies = async (req, res, next) => {
             })
         }
         const result = await uploaderMovies(req.file, "Movies", req.params.id);
-        const { data, err, msg } = result
+        const { data, err } = result
         if (err) throw { msg: err };
         if (!data) {
             return next()
