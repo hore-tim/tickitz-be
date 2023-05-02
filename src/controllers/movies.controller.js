@@ -1,13 +1,23 @@
 const moviesModel = require('../models/movies.model')
-const { uploaderUsers } = require("../utils/cloudinary");
+const { uploaderMovies } = require("../utils/cloudinary");
 const db = require("../configs/supabase");
 
 const addMovies = async (req, res) => {
     try {
         const { body } = req;
         const result = await moviesModel.addMovies(body);
+        const uploadImage = await uploaderMovies(req.file, "Movies", result.rows[0].id)
+        const { data, err } = uploadImage
+        if (err) throw { msg: err };
+        const dataSend = {
+            image: data.secure_url
+        }
+        const params = {
+            id: result.rows[0].id
+        }
+        const updateImage = await moviesModel.editMovies(dataSend, params)
         res.status(201).json({
-            data: result.rows,
+            data: updateImage.rows,
             msg: "Success add new movies"
         });
     } catch (error) {

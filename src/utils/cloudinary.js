@@ -47,7 +47,6 @@ const uploaderMovies = async (file, prefix, id) => {
       public_id: fileName,
       folder: "movies",
     });
-    
     return { data: result, msg: "OK" };
   } catch (err) {
     return { data: null, msg: "Upload Failed", err };
