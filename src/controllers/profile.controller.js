@@ -116,9 +116,30 @@ const updatePoin = async (req, res) => {
   }
 };
 
+const deleteImage = async (req, res) => {
+  const client = await db.connect();
+  try {
+    const { id } = req.authInfo;
+    await client.query("BEGIN");
+    const resultUserBio = await profileModel.deleteImage(id);
+    await client.query("COMMIT");
+    res.status(200).json({
+      msg: "Update Success...",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      msg: "Internal Server Error...",
+    });
+  } finally {
+    client.release();
+  }
+};
+
 module.exports = {
   getProfile,
   updateProfile,
   updatePoin,
   updateProfileImage,
+  deleteImage,
 };

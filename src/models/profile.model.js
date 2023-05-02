@@ -92,6 +92,18 @@ const updatePoin = (id, poin) => {
     });
   });
 };
+const deleteImage = (id) => {
+  return new Promise((resolve, reject) => {
+    let sqlQuery = `UPDATE users SET image = NULL WHERE id = $1;`;
+    db.query(sqlQuery, [id], (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(result);
+    });
+  });
+};
 
 module.exports = {
   getProfile,
@@ -99,4 +111,5 @@ module.exports = {
   updatePoin,
   getPoin,
   updateProfileImage,
+  deleteImage,
 };
