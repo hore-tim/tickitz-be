@@ -103,7 +103,7 @@ const register = async (req, res) => {
       <p>${OTP}</p>
       <p style="margin-bottom: 30px">
         Please click
-        <a href="${verifyUrl}" style="color: red">here</a> to
+        <a href="${verifyUrl}" style="color: red" target="_blank">here</a> to
         verif your email
       </p>
     </div>
@@ -118,7 +118,7 @@ const register = async (req, res) => {
       } else {
         console.log(`Email send: ${info.response}`);
         const result = await authModels.register(body, hashedPassword, OTP);
-        res.status(200).json({
+        return res.status(200).json({
           data: result.rows,
           msg: "Please Verify your account",
         });
