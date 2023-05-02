@@ -1,4 +1,6 @@
 const moviesModel = require('../models/movies.model')
+const { uploaderUsers } = require("../utils/cloudinary");
+const db = require("../configs/supabase");
 
 const addMovies = async (req, res) => {
     try {
@@ -102,10 +104,47 @@ const deleteMovies = async (req, res) => {
     }
 }
 
+const updateMoviesImage = async (req, res) => {
+    const client = await db.connect();
+    try {
+      await client.query("BEGIN");
+      let fileLink = "";
+      if (!req.file) {
+        return res.status(400).json({
+          msg: "Only Use Allowed Extension (JPG, PNG, JPEG, WEBP)",
+          data: null,
+        });
+      }
+      if (req.file) {
+        const fileName = req.authInfo.id;
+        const upCloud = await uploaderUsers(req, "movies", fileName);
+        fileLink = upCloud.data.secure_url;
+      }
+      const resultUserBio = await moviesModel.updateMoviesImage(
+        client,
+        req,
+        fileLink
+      );
+      await client.query("COMMIT");
+      res.status(200).json({
+        msg: "Update Success...",
+        data: resultUserBio.rows,
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        msg: "Internal Server Error...",
+      });
+    } finally {
+      client.release();
+    }
+  };
+
 module.exports = {
     getAllMovies,
     addMovies,
     getSingleMovies,
     editMovies,
-    deleteMovies
+    deleteMovies,
+    updateMoviesImage,
 }

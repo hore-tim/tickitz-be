@@ -16,8 +16,7 @@ const addMovies = (data) => {
 
 const getAllMovies = (query) => {
     return new Promise((resolve, reject) => {
-        let sql = `select m.title, m.image as movies_image, m.synopsis, m.duration, m.release_date, m.duration, m.director, m.casts, m.synopsis, m.seller_id, t.show_date, t.show_time, c."name" as cinema_name, c.image as cinema_image 
-        from movies m join cinemas c on c.movies_id = m.id join "time" t on t.cinemas_id = c.id `;
+        let sql = `select m.id, m.title, m.image as movies_image, m.synopsis, m.duration, m.release_date, m.duration, m.director, m.casts, m.synopsis, m.seller_id, t.show_date, t.show_time, c."name" as cinema_name, c.image as cinema_image from movies m left join cinemas c on c.movies_id = m.id left join "time" t on t.cinemas_id = c.id `;
         if(query.show && query.show === 'now') {
             sql += `where t.show_date <= now() `
         }
@@ -52,7 +51,7 @@ const getAllMovies = (query) => {
         const offset = (page - 1) * limit
 
         sql += `limit $1 offset $2`;
-
+        console.log(sql);
         supabase.query(sql, [limit, offset], ((err, result) => {
             if (err) {
                 return reject(err)
@@ -64,13 +63,15 @@ const getAllMovies = (query) => {
 
 const getMetaMovies = (query) => {
     return new Promise((resolve, reject) => {
-        let sql = `select count(*) as total_movies from movies m join cinemas c on c.movies_id = m.id join "time" t on t.cinemas_id = c.id `;
+        let sql = `select count(*) as total_movies from movies m left join cinemas c on c.movies_id = m.id left join "time" t on t.cinemas_id = c.id `;
         if(query.show && query.show === 'now') {
             sql += `where t.show_date <= now() `
+            endpoint += `show=${query.show}&`;
         }
         if(query.show && query.show !== 'now') {
             let showDate = query.show.split('-')
             sql += `where date_part('month', t.show_date)=${showDate[1]} and date_part('year', t.show_date)=${showDate[0]} `
+            endpoint += `show=${query.show}&`;
         }
         let endpoint = `/movies?`;
         if (query.sort !== undefined) {
@@ -138,8 +139,8 @@ const getShowingMovies = (params) => {
 const editMovies = (data, params) => {
     return new Promise((resolve, reject) => {
         const dataAvail = [];
-        if (data.name != null) {
-            dataAvail.push('name=')
+        if (data.title != null) {
+            dataAvail.push('title=')
         }
         if (data.image != null) {
             dataAvail.push('image=')
@@ -163,9 +164,10 @@ const editMovies = (data, params) => {
             dataAvail.push('synopsis=')
         }
         const dataQuery = dataAvail.map((data, i) => (`${data}$${i + 1}`)).join(`, `)
-        const rawValues = [data.name, data.image, data.category, data.releaseDate, data.duration, data.director, data.casts, data.synopsis, params.id];
+        const rawValues = [data.title, data.image, data.category, data.releaseDate, data.duration, data.director, data.casts, data.synopsis, params.id];
         const values = rawValues.filter(d => d);
         let sql = `update movies set ${dataQuery} where id=$${values.length} RETURNING *`;
+        console.log(sql);
         supabase.query(sql, values, (err, result) => {
             if (err) {
                 return reject(err);
@@ -189,6 +191,35 @@ const deleteMovies = (params) => {
     })
 }
 
+const updateMoviesImage = (client, req, fileLink) => {
+    return new Promise((resolve, reject) => {
+      let sqlQuery = "UPDATE movies SET ";
+      let values = [];
+      let i = 1;
+      const body = req.body;
+      if (body.password) {
+        delete body.password;
+      }
+      for (const [key, val] of Object.entries(body)) {
+        sqlQuery += `${key} = $${i}, `;
+        values.push(val);
+        i++;
+      }
+      if (req.file) {
+        sqlQuery += `image = '${fileLink}', `;
+      }
+  
+      sqlQuery = sqlQuery.slice(0, -2);
+      sqlQuery += ` WHERE id = $${i} RETURNING *`;
+      values.push(req.authInfo.id);
+      console.log(sqlQuery);
+      client.query(sqlQuery, values, (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      });
+    });
+  };
+
 module.exports = {
     addMovies,
     getAllMovies,
@@ -196,5 +227,6 @@ module.exports = {
     getMetaMovies,
     editMovies,
     deleteMovies,
+    updateMoviesImage,
 
 }
