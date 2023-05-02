@@ -16,13 +16,19 @@ const addMovies = (data) => {
 
 const getAllMovies = (query) => {
     return new Promise((resolve, reject) => {
-        let sql = `select m.id, m.title, m.image as movies_image, m.synopsis, m.duration, m.release_date, m.duration, m.director, m.casts, m.synopsis, m.seller_id, t.show_date, t.show_time, c."name" as cinema_name, c.image as cinema_image from movies m left join cinemas c on c.movies_id = m.id left join "time" t on t.cinemas_id = c.id `;
+        let sql = `select m.id, m.title, m.image as movies_image,m.category, m.synopsis, m.duration, m.release_date, m.duration, m.director, m.casts, m.synopsis, m.seller_id, t.show_date, t.show_time, c."name" as cinema_name, c.image as cinema_image from movies m left join cinemas c on c.movies_id = m.id left join "time" t on t.cinemas_id = c.id `;
         if(query.show && query.show === 'now') {
             sql += `where t.show_date <= now() `
         }
         if(query.show && query.show !== 'now') {
             let showDate = query.show.split('-')
             sql += `where date_part('month', t.show_date)=${showDate[1]} and date_part('year', t.show_date)=${showDate[0]} `
+        }
+        if(query.category !== undefined) {
+            query.category && query.show ? sql+=`and lower(category) like lower('%${query.category}%') ` :  sql += `where lower(category) like lower('%${query.category}%') `
+        }
+        if (query.search) {
+            query.search && query.show ? sql+=`and lower(title) like lower('%${query.search}%') ` : query.search && query.category ? sql+=`and lower(title) like lower('%${query.search}%') ` : sql += `where lower(title) like lower('%${query.search}%') `
         }
         switch (query.sort) {
             case "name_asc":
@@ -64,6 +70,7 @@ const getAllMovies = (query) => {
 const getMetaMovies = (query) => {
     return new Promise((resolve, reject) => {
         let sql = `select count(*) as total_movies from movies m left join cinemas c on c.movies_id = m.id left join "time" t on t.cinemas_id = c.id `;
+        let endpoint = `/movies?`;
         if(query.show && query.show === 'now') {
             sql += `where t.show_date <= now() `
             endpoint += `show=${query.show}&`;
@@ -73,7 +80,14 @@ const getMetaMovies = (query) => {
             sql += `where date_part('month', t.show_date)=${showDate[1]} and date_part('year', t.show_date)=${showDate[0]} `
             endpoint += `show=${query.show}&`;
         }
-        let endpoint = `/movies?`;
+        if(query.category !== undefined) {
+            query.category && query.show ? sql+=`and lower(category) like lower('%${query.category}%') ` :  sql += `where lower(category) like lower('%${query.category}%') `
+            endpoint += `category=${query.category}&`;
+        }
+        if (query.search !== undefined) {
+            query.search && query.show ? sql+=`and lower(title) like lower('%${query.search}%') ` : query.search && query.category ? sql+=`and lower(title) like lower('%${query.search}%') ` : sql += `where lower(title) like lower('%${query.search}%') `
+            endpoint += `search=${query.search}&`;
+        }
         if (query.sort !== undefined) {
             endpoint += `sort=${query.sort}&`;
         }
