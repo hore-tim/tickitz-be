@@ -1,5 +1,4 @@
 const db = require("../configs/supabase");
-const moment = require("moment");
 const addShow = (body) => {
   return new Promise((resolve, reject) => {
     const sql = `insert into "show" (movies_id, cinemas_id, showdate, showtime, price) 
@@ -39,7 +38,6 @@ const getSingleShow = (params) => {
 };
 
 const getAllShow = (city_name, movie_id) => {
-  // Ubah format show_date menjadi 'YYYY-MM-DD'
   return new Promise((resolve, reject) => {
     let sql = `  SELECT cb.image AS cinema_brand_image, c.address, cb.name AS cinema_title, c.address AS cinema_address, 
         s.showtime AS cinema_showtime, s.showdate as cinema_showdate, s.price
