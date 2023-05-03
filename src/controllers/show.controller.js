@@ -38,8 +38,8 @@ const getLocation = async (req, res) => {
 
 const getAllShow = async (req, res) => {
   try {
-    const { city_name, movie_id } = req.body;
-    const result = await showModel.getAllShow(city_name, movie_id);
+    const { query } = req;
+    const result = await showModel.getAllShow(query);
     if (result.rows.length === 0) {
       return res.status(404).json({
         data: result.rows,

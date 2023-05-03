@@ -1,4 +1,5 @@
 const db = require("../configs/supabase");
+
 const addShow = (body) => {
   return new Promise((resolve, reject) => {
     const sql = `insert into "show" (movies_id, cinemas_id, showdate, showtime, price) 
@@ -37,7 +38,7 @@ const getSingleShow = (params) => {
   });
 };
 
-const getAllShow = (city_name, movie_id) => {
+const getAllShow = (query) => {
   return new Promise((resolve, reject) => {
     let sql = `select s.id, s.movies_id, c.cinemas_brand_id, s.cinemas_id, s.showdate, s.showtime, s.price, c.city_id  from "show" s 
         left join cinemas c on s.cinemas_id = c.id 
@@ -55,30 +56,16 @@ const getAllShow = (city_name, movie_id) => {
         ? (sql += `and c.cinemas_brand_id ='${query.cinemasBrandId}' `)
         : (sql += `where c.cinemas_brand_id ='${query.cinemasBrandId}' `);
     }
+    if (query.moviesId !== undefined) {
+      query.showdate || query.cinemasBrandId || query.cityId
+        ? sql += `and s.movies_id ='${query.moviesId}' `
+        : sql += `where s.movies_id ='${query.moviesId}' `
+    }
     db.query(sql, (err, result) => {
       if (err) {
         return reject(err);
       }
       resolve(result);
-      
-        if(query.showdate !== undefined) {
-            sql += `where showdate='${query.showdate}' `
-        }
-        if(query.cityId !== undefined) {
-            query.cityId && query.showdate ?  sql += `and c.city_id ='${query.cityId}' ` : sql += `where c.city_id ='${query.cityId}' `
-        }
-        if(query.cinemasBrandId !== undefined) {
-            query.cityId || query.showdate ?  sql += `and c.cinemas_brand_id ='${query.cinemasBrandId}' ` : sql += `where c.cinemas_brand_id ='${query.cinemasBrandId}' `
-        }
-        if(query.moviesId !== undefined) {
-            query.showdate || query.cinemasBrandId || query.cityId ? sql += `and s.movies_id ='${query.moviesId}' ` : sql += `where s.movies_id ='${query.moviesId}' `
-        }
-        db.query(sql, (err, result) => {
-            if (err) {
-                return reject(err)
-            }
-            resolve(result)
-        });
     });
   });
 };

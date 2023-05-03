@@ -29,7 +29,7 @@ const getAllMovies = (query) => {
     let sql = `select m.id, m.title, m.image as movies_image, m.synopsis, m.duration, m.release_date, m.duration, m.director, m.casts, m.synopsis, m.seller_id, s.showdate, s.showtime 
         from movies m left join show s on s.movies_id = m.id  `;
     if (query.show && query.show === "now") {
-      sql += `where s.showdate <= now() `;
+      sql += `where date_trunc('month', s.showdate) = date_trunc('month', current_date) `;
     }
     if (query.show && query.show !== "now") {
       let showDate = query.show.split("-");
@@ -97,7 +97,7 @@ const getMetaMovies = (query) => {
     let sql = `select count(*) as total_movies from movies m left join show s on s.movies_id = m.id `;
     let endpoint = `/movies?`;
     if (query.show && query.show === "now") {
-      sql += `where s.showdate <= now() `;
+      sql += `where date_trunc('month', s.showdate) = date_trunc('month', current_date) `;
       endpoint += `show=${query.show}&`;
     }
     if (query.show && query.show !== "now") {
