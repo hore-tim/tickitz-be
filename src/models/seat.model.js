@@ -22,7 +22,7 @@ const getSeat = (show_id) => {
     LEFT JOIN orderstatus ON seat.order_status_id = orderstatus.id
   WHERE
     show.id = $1
-  ORDER BY seat
+  ORDER BY seat.id
     `;
     const values = [show_id];
     db.query(sqlQuery, values, (err, result) => {
