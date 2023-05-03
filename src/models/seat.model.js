@@ -5,7 +5,7 @@ const getSeat = (show_id) => {
   return new Promise((resolve, reject) => {
     let sqlQuery = `SELECT
   movies.title,
-  cinemas_brand.name AS cinema_brand_name,
+  cinemasbrand.name AS cinema_brand_name,
   show.showtime AS show_time,
   TO_CHAR(show.showdate, 'YYYY-MM-DD') AS show_date,
   seat.id,
@@ -16,7 +16,7 @@ const getSeat = (show_id) => {
     movies
     JOIN show ON movies.id = show.movies_id
     JOIN cinemas ON show.cinemas_id = cinemas.id
-    JOIN cinemas_brand ON cinemas.cinemas_brand_id = cinemas_brand.id
+    JOIN cinemabrand ON cinemas.cinemas_brand_id = cinemasbrand.id
     JOIN seat ON show.id = seat.show_id
     JOIN seat_rows_number ON seat.id_seat_rows_number = seat_rows_number.id
     LEFT JOIN reservation ON seat.id = reservation.seat_id
