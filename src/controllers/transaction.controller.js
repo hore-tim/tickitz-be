@@ -12,22 +12,58 @@ const getTransaction = async (req, res) => {
       return;
     }
     const dataResult = [];
+    // return console.log(result.rows);
     result.rows.forEach((data) => {
-      const idx = dataResult.findIndex((item) => item.id === data.user_id);
+      const idx = dataResult.findIndex(
+        (item) => item.reservation_id === item.reservation_id
+      );
       if (idx >= 0) {
-        dataResult[idx].seat_id.push(data.seat_id);
-        dataResult[idx].id.push(data.id);
+        console.log(dataResult[idx]);
+        dataResult[idx].seats.push({ seat: data.seats, price: data.price });
       } else {
         dataResult.push({
-          id: [data.id],
-          transaction_id: createTransaction[0].id,
-          user_id: data.user_id,
-          seat_id: [data.seat_id],
-          payment_id: null,
-          "created-at": data.created_at,
+          transaction_id: data.transaction_id,
+          movie_title: data.movie_title,
+          cinemas_name: data.cinemas_name,
+          show_date: data.show_date,
+          show_time: data.show_time,
+          movie_category: data.movie_category,
+          seats: [{ seat: data.seats, price: data.price }],
+          status: data.status,
         });
       }
     });
+    res.status(200).json({
+      data: dataResult,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+};
+
+const createTransaction = async (req, res) => {
+  try {
+    const { transaction_id, payment_id } = req.body;
+    const payment = await transactionModel.cekPayment(payment_id);
+    if (payment.rows.length === 0) {
+      res.status(404).json({
+        msg: "payment not found",
+      });
+      return;
+    }
+    const result = await transactionModel.createTransaction(
+      transaction_id,
+      payment_id
+    );
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        msg: "transaction failed",
+      });
+      return;
+    }
     res.status(200).json({
       data: result.rows,
     });
@@ -39,6 +75,28 @@ const getTransaction = async (req, res) => {
   }
 };
 
+const getPayment = async (req, res) => {
+  try {
+    const payment = await transactionModel.getPayment();
+    if (payment.rows.length === 0) {
+      res.status(404).json({
+        msg: "payment not found",
+      });
+      return;
+    }
+    res.status(200).json({
+      data: payment.rows,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+};
+
 module.exports = {
   getTransaction,
+  createTransaction,
+  getPayment,
 };
