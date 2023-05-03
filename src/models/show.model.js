@@ -10,9 +10,9 @@ const addShow = (body) => {
                 return reject(err)
             }
             resolve(result)
-        })
-    })
-}
+        });
+    });
+};
 
 const getSingleShow = (params) => {
     return new Promise((resolve, reject) => {
@@ -34,9 +34,18 @@ const getSingleShow = (params) => {
 
 const getAllShow = (query) => {
     return new Promise((resolve, reject) => {
-        let sql = `select * from show `;
+        let sql = `select s.id, s.movies_id, c.cinemas_brand_id, s.cinemas_id, s.showdate, s.showtime, s.prices, c.city_id  from "show" s 
+        left join cinemas c on s.cinemas_id = c.id 
+        left join cinemasbrand c2 on c.cinemas_brand_id = c2.id `;
+        
         if(query.showdate !== undefined) {
             sql += `where showdate='${query.showdate}' `
+        }
+        if(query.cityId !== undefined) {
+            query.cityId && query.showdate ?  sql += `and c.city_id ='${query.cityId}' ` : sql += `where c.city_id ='${query.cityId}' `
+        }
+        if(query.cinemasBrandId !== undefined) {
+            query.cityId || query.showdate ?  sql += `and c.cinemas_brand_id ='${query.cinemasBrandId}' ` : sql += `where c.cinemas_brand_id ='${query.cinemasBrandId}' `
         }
         db.query(sql, (err, result) => {
             if (err) {
@@ -89,8 +98,8 @@ const deleteShow = (params) => {
             resolve(result);
         }
         );
-    })
-}
+    });
+};
 module.exports = {
     addShow,
     getAllShow,
