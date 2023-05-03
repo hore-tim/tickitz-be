@@ -13,7 +13,7 @@ const getTransaction = (transacion_id) => {
   movies.category AS movie_category,
   reservation.id as reservation_id,
   seat_rows_number.name AS seats,
-  show.prices AS price,
+  show.price AS price,
   transaction.status as status 
 FROM 
   reservation 
@@ -36,7 +36,7 @@ GROUP BY
   reservation.id,
   movies.category, 
   seat_rows_number.name, 
-  show.prices,
+  show.price,
  transaction.status
     `;
     const values = [transacion_id];
@@ -94,9 +94,29 @@ const getPayment = () => {
   });
 };
 
+const updateStatusOrder = (transacion_id) => {
+  return new Promise((resolve, reject) => {
+    let sqlQuery = `UPDATE seat
+    SET order_status_id = 2
+    FROM reservation
+    JOIN transaction ON reservation.transaction_id = transaction.id
+    WHERE reservation.seat_id = seat.id
+    AND transaction.id = $1 RETURNING *
+    `;
+    db.query(sqlQuery, [transacion_id], (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(result);
+    });
+  });
+};
+
 module.exports = {
   getTransaction,
   createTransaction,
   cekPayment,
   getPayment,
+  updateStatusOrder,
 };
