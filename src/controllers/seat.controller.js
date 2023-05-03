@@ -3,7 +3,8 @@ const db = require("../configs/supabase");
 const moment = require("moment");
 const getSeat = async (req, res) => {
   try {
-    const { show_id } = req.body;
+    // const { show_id } = req.body;
+    const { show_id } = req.params;
     const result = await seatModel.getSeat(show_id);
     if (result.rows.length === 0) {
       res.status(404).json({
