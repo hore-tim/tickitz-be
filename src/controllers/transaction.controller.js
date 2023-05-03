@@ -3,7 +3,7 @@ const db = require("../configs/supabase");
 const moment = require("moment");
 const getTransaction = async (req, res) => {
   try {
-    const { transaction_id } = req.body;
+    const { transaction_id } = req.params;
     const result = await transactionModel.getTransaction(transaction_id);
     if (result.rows.length === 0) {
       res.status(404).json({
