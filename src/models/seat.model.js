@@ -10,7 +10,7 @@ const getSeat = (show_id) => {
   TO_CHAR(show.showdate, 'YYYY-MM-DD') AS show_date,
   seat.id as seat_id,
   seat_rows_number.name AS seat,
-  show.prices,
+  show.price,
   orderstatus.name AS status_order
   FROM
     movies
