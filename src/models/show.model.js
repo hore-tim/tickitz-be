@@ -1,5 +1,4 @@
 const db = require("../configs/supabase");
-
 const addShow = (body) => {
   return new Promise((resolve, reject) => {
     const sql = `insert into "show" (movies_id, cinemas_id, showdate, showtime, price) 
@@ -38,7 +37,7 @@ const getSingleShow = (params) => {
   });
 };
 
-const getAllShow = (query) => {
+const getAllShow = (city_name, movie_id) => {
   return new Promise((resolve, reject) => {
     let sql = `select s.id, s.movies_id, c.cinemas_brand_id, s.cinemas_id, s.showdate, s.showtime, s.price, c.city_id  from "show" s 
         left join cinemas c on s.cinemas_id = c.id 
@@ -56,36 +55,30 @@ const getAllShow = (query) => {
         ? (sql += `and c.cinemas_brand_id ='${query.cinemasBrandId}' `)
         : (sql += `where c.cinemas_brand_id ='${query.cinemasBrandId}' `);
     }
-    if (query.moviesId !== undefined) {
-      query.showdate || query.cinemasBrandId || query.cityId
-        ? sql += `and s.movies_id ='${query.moviesId}' `
-        : sql += `where s.movies_id ='${query.moviesId}' `
-    }
-
     db.query(sql, (err, result) => {
       if (err) {
         return reject(err);
       }
       resolve(result);
-
-      // if (query.showdate !== undefined) {
-      //   sql += `where showdate='${query.showdate}' `
-      // }
-      // if (query.cityId !== undefined) {
-      //   query.cityId && query.showdate ? sql += `and c.city_id ='${query.cityId}' ` : sql += `where c.city_id ='${query.cityId}' `
-      // }
-      // if (query.cinemasBrandId !== undefined) {
-      //   query.cityId || query.showdate ? sql += `and c.cinemas_brand_id ='${query.cinemasBrandId}' ` : sql += `where c.cinemas_brand_id ='${query.cinemasBrandId}' `
-      // }
-      // if (query.moviesId !== undefined) {
-      //   query.showdate || query.cinemasBrandId || query.cityId ? sql += `and s.movies_id ='${query.moviesId}' ` : sql += `where s.movies_id ='${query.moviesId}' `
-      // }
-      // db.query(sql, (err, result) => {
-      //   if (err) {
-      //     return reject(err)
-      //   }
-      //   resolve(result)
-      // });
+      
+        if(query.showdate !== undefined) {
+            sql += `where showdate='${query.showdate}' `
+        }
+        if(query.cityId !== undefined) {
+            query.cityId && query.showdate ?  sql += `and c.city_id ='${query.cityId}' ` : sql += `where c.city_id ='${query.cityId}' `
+        }
+        if(query.cinemasBrandId !== undefined) {
+            query.cityId || query.showdate ?  sql += `and c.cinemas_brand_id ='${query.cinemasBrandId}' ` : sql += `where c.cinemas_brand_id ='${query.cinemasBrandId}' `
+        }
+        if(query.moviesId !== undefined) {
+            query.showdate || query.cinemasBrandId || query.cityId ? sql += `and s.movies_id ='${query.moviesId}' ` : sql += `where s.movies_id ='${query.moviesId}' `
+        }
+        db.query(sql, (err, result) => {
+            if (err) {
+                return reject(err)
+            }
+            resolve(result)
+        });
     });
   });
 };
@@ -140,10 +133,30 @@ const deleteShow = (params) => {
     });
   });
 };
+
+const getLocation = (movie_id) => {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT city.name AS location
+    FROM movies
+    JOIN show ON movies.id::integer = show.movies_id::integer
+    JOIN cinemas ON show.cinemas_id::integer = cinemas.id::integer
+    JOIN city ON cinemas.city_id::integer = city.id::integer
+    WHERE movies.id::integer = $1::integer`;
+    db.query(sql, [parseInt(movie_id)], (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(result);
+    });
+  });
+};
+
 module.exports = {
   addShow,
   getAllShow,
   editShow,
   getSingleShow,
   deleteShow,
+  getLocation,
 };
