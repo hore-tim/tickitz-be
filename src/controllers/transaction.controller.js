@@ -18,7 +18,6 @@ const getTransaction = async (req, res) => {
         (item) => item.reservation_id === item.reservation_id
       );
       if (idx >= 0) {
-        console.log(dataResult[idx]);
         dataResult[idx].seats.push({ seat: data.seats, price: data.price });
       } else {
         dataResult.push({
@@ -64,8 +63,11 @@ const createTransaction = async (req, res) => {
       });
       return;
     }
+    const statusOrder = await transactionModel.updateStatusOrder(
+      transaction_id
+    );
     res.status(200).json({
-      data: result.rows,
+      data: statusOrder.rows,
     });
   } catch (error) {
     console.log(error.message);
