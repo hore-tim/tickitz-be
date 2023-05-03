@@ -53,13 +53,19 @@ const getAllMovies = (query) => {
             default: sql += `order by m.title asc `;
         }
 
-        const limit = Number(query.limit || 10);
         const page = Number(query.page || 1);
-        const offset = (page - 1) * limit
+        let limit = null
+        let offset = null
+        let values = []
 
-        sql += `limit $1 offset $2`;
-        console.log(sql);
-        supabase.query(sql, [limit, offset], ((err, result) => {
+        if (query.limit !== undefined) {
+            limit = Number(query.limit);
+            offset = (page - 1) * limit
+            sql += `limit $1 offset $2`;
+            values = [limit, offset]
+        }
+
+        supabase.query(sql, values, ((err, result) => {
             if (err) {
                 return reject(err)
             }
@@ -101,11 +107,16 @@ const getMetaMovies = (query) => {
             }
             const totalMovies = Number(result.rows[0].total_movies);
             const page = Number(query.page || 1);
-            const dataLimit = Number(query.limit || 10);
-            const totalPage = Math.ceil(totalMovies / dataLimit);
+            const dataLimit = Number(query.limit);
+            let totalPage = 1
+            if (query.limit !== undefined) {
+                endpoint += `limit=${query.limit}&`;
+                totalPage = Math.ceil(totalMovies / dataLimit)
+            }
             
-            let prev = `${endpoint}limit=${dataLimit}&page=${page - 1}`;
-            let next = `${endpoint}limit=${dataLimit}&page=${page + 1}`;
+            
+            let prev = `${endpoint}page=${page - 1}`;
+            let next = `${endpoint}page=${page + 1}`;
             if (page === 1) {
                 prev = null
             }
@@ -138,22 +149,7 @@ const getSingleMovies = (params) => {
     })
 }
 
-const getShowingMovies = (params) => {
-    return new Promise((resolve, reject) => {
-        const sql = `select * from movies where release_date <= now() `;
-        supabase.query(sql, [params.id], (err, result) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-            resolve(result);
-        })
-    })
-}
-
 const editMovies = (data, params) => {
-    let id = null
-    params.id ? id = params.id : id = data.moviesId
     return new Promise((resolve, reject) => {
         const dataAvail = [];
         if (data.title != null) {
@@ -181,10 +177,9 @@ const editMovies = (data, params) => {
             dataAvail.push('synopsis=')
         }
         const dataQuery = dataAvail.map((data, i) => (`${data}$${i + 1}`)).join(`, `)
-        const rawValues = [data.title, data.image, data.category, data.releaseDate, data.duration, data.director, data.casts, data.synopsis, id ];
+        const rawValues = [data.title, data.image, data.category, data.releaseDate, data.duration, data.director, data.casts, data.synopsis, params.id ];
         const values = rawValues.filter(d => d);
-        let sql = `update movies set ${dataQuery} where id=$${values.length} RETURNING *`;
-        console.log(sql);
+        let sql = `update show set ${dataQuery} where id=$${values.length} RETURNING *`;
         supabase.query(sql, values, (err, result) => {
             if (err) {
                 return reject(err);
