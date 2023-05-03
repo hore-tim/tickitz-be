@@ -3,6 +3,6 @@ const locationRouter = Router();
 
 const showController = require("../controllers/show.controller");
 
-locationRouter.get("/", showController.getLocation);
+locationRouter.get("/:movie_id", showController.getLocation);
 
 module.exports = locationRouter;
