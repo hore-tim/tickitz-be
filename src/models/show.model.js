@@ -1,5 +1,5 @@
 const db = require("../configs/supabase");
-
+const moment = require("moment");
 const addShow = (body) => {
   return new Promise((resolve, reject) => {
     const sql = `insert into "show" (movies_id, cinemas_id, showdate, showtime, price) 
@@ -38,26 +38,19 @@ const getSingleShow = (params) => {
   });
 };
 
-const getAllShow = (query) => {
+const getAllShow = (city_name, movie_id) => {
+  // Ubah format show_date menjadi 'YYYY-MM-DD'
   return new Promise((resolve, reject) => {
-    let sql = `select s.id, s.movies_id, c.cinemas_brand_id, s.cinemas_id, s.showdate, s.showtime, s.price, c.city_id  from "show" s 
-        left join cinemas c on s.cinemas_id = c.id 
-        left join cinemasbrand c2 on c.cinemas_brand_id = c2.id `;
-
-    if (query.showdate !== undefined) {
-      sql += `where showdate='${query.showdate}' `;
-    }
-    if (query.cityId !== undefined) {
-      query.cityId && query.showdate
-        ? (sql += `and c.city_id ='${query.cityId}' `)
-        : (sql += `where c.city_id ='${query.cityId}' `);
-    }
-    if (query.cinemasBrandId !== undefined) {
-      query.cityId || query.showdate
-        ? (sql += `and c.cinemas_brand_id ='${query.cinemasBrandId}' `)
-        : (sql += `where c.cinemas_brand_id ='${query.cinemasBrandId}' `);
-    }
-    db.query(sql, (err, result) => {
+    let sql = `  SELECT cb.image AS cinema_brand_image, cb.name AS cinema_title, c.address AS cinema_address, 
+        s.showtime AS cinema_showtime, s.showdate as cinema_showdate, s.price
+        FROM show s
+        JOIN cinemas c ON s.cinemas_id = c.id
+        JOIN city ct ON c.city_id = ct.id
+        JOIN cinemasbrand cb ON c.cinemas_brand_id = cb.id
+        WHERE ct.name = $1 and s.movies_id = $2::integer
+            `;
+    const values = [city_name, movie_id];
+    db.query(sql, values, (err, result) => {
       if (err) {
         return reject(err);
       }
