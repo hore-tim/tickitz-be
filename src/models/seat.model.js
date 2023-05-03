@@ -8,7 +8,7 @@ const getSeat = (show_id) => {
   cinemasbrand.name AS cinema_brand_name,
   show.showtime AS show_time,
   TO_CHAR(show.showdate, 'YYYY-MM-DD') AS show_date,
-  seat.id,
+  seat.id as seat_id,
   seat_rows_number.name AS seat,
   show.price,
   orderstatus.name AS status_order
@@ -19,11 +19,10 @@ const getSeat = (show_id) => {
     JOIN cinemasbrand ON cinemas.cinemas_brand_id = cinemasbrand.id
     JOIN seat ON show.id = seat.show_id
     JOIN seat_rows_number ON seat.id_seat_rows_number = seat_rows_number.id
-    LEFT JOIN reservation ON seat.id = reservation.seat_id
     LEFT JOIN orderstatus ON seat.order_status_id = orderstatus.id
   WHERE
     show.id = $1
-  ORDER BY seat
+  ORDER BY seat.id
     `;
     const values = [show_id];
     db.query(sqlQuery, values, (err, result) => {
@@ -104,8 +103,8 @@ const cekSeat = (dataSeat) => {
 
 const createTransaction = () => {
   return new Promise((resolve, reject) => {
-    let sqlQuery = `insert into transaction (payment_id) values ($1) RETURNING id`;
-    const values = [null];
+    let sqlQuery = `insert into transaction (payment_id, status) values ($1, $2) RETURNING id, status`;
+    const values = [null, "pending"];
     db.query(sqlQuery, values, (err, result) => {
       if (err) {
         reject(err);
