@@ -104,8 +104,8 @@ const cekSeat = (dataSeat) => {
 
 const createTransaction = () => {
   return new Promise((resolve, reject) => {
-    let sqlQuery = `insert into transaction (payment_id) values ($1) RETURNING id`;
-    const values = [null];
+    let sqlQuery = `insert into transaction (payment_id, status) values ($1, $2) RETURNING id, status`;
+    const values = [null, "pending"];
     db.query(sqlQuery, values, (err, result) => {
       if (err) {
         reject(err);

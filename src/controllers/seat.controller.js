@@ -105,6 +105,7 @@ const orderSeat = async (req, res) => {
           user_id: data.user_id,
           seat_id: [data.seat_id],
           payment_id: null,
+          status_transaction: createTransaction[0].status,
           "created-at": data.created_at,
         });
       }
