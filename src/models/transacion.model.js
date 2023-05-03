@@ -94,6 +94,42 @@ const getPayment = () => {
   });
 };
 
+const getAllTransaction = (id) => {
+  return new Promise((resolve, reject) => {
+    let sqlQuery = ` SELECT
+  t.id as transaction_id,
+  r.id as reservation_id,
+  sh.showtime AS show_time, 
+  TO_CHAR(sh.showdate, 'YYYY-MM-DD') AS show_date, 
+  m.title AS movie_title, 
+  cb.name AS cinemas_brand_name, 
+  cb.image AS cinemas_brand_image, 
+  m.category AS movie_category, 
+  sn.name AS seats, 
+  sh.price AS price, 
+  t.status AS transaction_status 
+FROM 
+  transaction t 
+  JOIN reservation r ON r.transaction_id = t.id 
+  JOIN seat s ON s.id = r.seat_id 
+  JOIN show sh ON sh.id = s.show_id 
+  JOIN movies m ON m.id = sh.movies_id 
+  JOIN cinemas c ON c.id = sh.cinemas_id 
+  JOIN cinemasbrand cb ON cb.id = c.cinemas_brand_id 
+  JOIN seat_rows_number sn ON sn.id = s.id_seat_rows_number 
+WHERE 
+  r.user_id = $1;
+    `;
+    db.query(sqlQuery, [id], (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(result);
+    });
+  });
+};
+
 const updateStatusOrder = (transacion_id) => {
   return new Promise((resolve, reject) => {
     let sqlQuery = `UPDATE seat
@@ -119,4 +155,5 @@ module.exports = {
   cekPayment,
   getPayment,
   updateStatusOrder,
+  getAllTransaction,
 };
