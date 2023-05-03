@@ -19,6 +19,11 @@ transactionRoute.get(
   authMiddleware.checkToken,
   transactionController.getPayment
 );
+transactionRoute.get(
+  "/all",
+  authMiddleware.checkToken,
+  transactionController.getAllTransaction
+);
 // transactionRoute.post(
 //   "/order",
 //   authMiddleware.checkToken,
