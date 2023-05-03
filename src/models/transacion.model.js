@@ -13,7 +13,7 @@ const getTransaction = (transacion_id) => {
   movies.category AS movie_category,
   reservation.id as reservation_id,
   seat_rows_number.name AS seats,
-  show.price AS price,
+  show.prices AS price,
   transaction.status as status 
 FROM 
   reservation 
@@ -36,7 +36,7 @@ GROUP BY
   reservation.id,
   movies.category, 
   seat_rows_number.name, 
-  show.price,
+  show.prices,
  transaction.status
     `;
     const values = [transacion_id];
