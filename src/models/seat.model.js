@@ -16,7 +16,7 @@ const getSeat = (show_id) => {
     movies
     JOIN show ON movies.id = show.movies_id
     JOIN cinemas ON show.cinemas_id = cinemas.id
-    JOIN cinemabrand ON cinemas.cinemas_brand_id = cinemasbrand.id
+    JOIN cinemasbrand ON cinemas.cinemas_brand_id = cinemasbrand.id
     JOIN seat ON show.id = seat.show_id
     JOIN seat_rows_number ON seat.id_seat_rows_number = seat_rows_number.id
     LEFT JOIN reservation ON seat.id = reservation.seat_id
