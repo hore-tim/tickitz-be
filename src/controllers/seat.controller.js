@@ -12,8 +12,15 @@ const getSeat = async (req, res) => {
       });
       return;
     }
+    const combinedData = result.rows.map(
+      ({ seat, price, status_order, ...rest }) => ({
+        ...rest,
+        details: [{ seat, price, status_order }],
+      })
+    );
+
     res.status(200).json({
-      data: result.rows,
+      data: combinedData,
     });
   } catch (error) {
     console.log(error.message);
