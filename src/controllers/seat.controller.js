@@ -12,33 +12,10 @@ const getSeat = async (req, res) => {
       });
       return;
     }
-    // const combinedData = result.rows.map(
-    //   ({ seat, price, status_order, ...rest }) => ({
-    //     ...rest,
-    //     details: [{ seat, price, status_order }],
-    //   })
-    // );
-
-    // const arrayResult = combinedData.reduce(
-    //   (acc, { title, cinema_brand_name, show_time, show_date, ...rest }) => {
-    //     const key = `${title}-${cinema_brand_name}-${show_time}-${show_date}`;
-    //     if (!acc[key]) {
-    //       acc[key] = {
-    //         title,
-    //         cinema_brand_name,
-    //         show_time,
-    //         show_date,
-    //         details: [],
-    //       };
-    //     }
-    //     acc[key].details.push(rest.details[0]);
-    //     return acc;
-    //   },
-    //   {}
-    // );
     const combinedObject = {
       title: result.rows[0].title,
       cinema_brand_name: result.rows[0].cinema_brand_name,
+      cinema_image: result.rows[0].cinema_image,
       show_time: result.rows[0].show_time,
       show_date: result.rows[0].show_date,
       details: result.rows.map(({ seat_id, seat, price, status_order }) => ({
