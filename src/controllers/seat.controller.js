@@ -3,17 +3,11 @@ const db = require("../configs/supabase");
 const moment = require("moment");
 const getSeat = async (req, res) => {
   try {
-    const { location, cinemaName, showTime, showDate, titleMovie } = req.body;
-    const result = await seatModel.getSeat(
-      location,
-      cinemaName,
-      showTime,
-      showDate,
-      titleMovie
-    );
+    const { show_id } = req.body;
+    const result = await seatModel.getSeat(show_id);
     if (result.rows.length === 0) {
       res.status(404).json({
-        msg: "Seat Not Found",
+        msg: "show_id not found",
       });
       return;
     }
@@ -33,41 +27,39 @@ const orderSeat = async (req, res) => {
   try {
     await client.query("BEGIN");
     const { id } = req.authInfo;
-    const { cinemas_id, seat_id, movie_id, show_time, show_date, city_name } =
-      req.body;
+    const { seat_id } = req.body;
     const dataArray = [];
     const dataSeat = [];
-    const dataCinema = [];
     seat_id.forEach((seat) => {
       dataArray.push({
-        cinemas_id,
         id,
         seat,
-        movie_id,
-        show_time,
-        show_date,
-        city_name,
       });
       dataSeat.push({ seat });
-      dataCinema.push({ cinemas_id });
     });
-    // return console.log(dataCinema);
-    const cekCinema = await seatModel.cekCinema(dataCinema);
-    if (cekCinema.length === 0) {
-      res.status(404).json({
-        msg: "Cinema Not Found",
+    // const cekCinema = await seatModel.cekCinema(dataCinema);
+    // if (cekCinema.length === 0) {
+    //   res.status(404).json({
+    //     msg: "Cinema Not Found",
+    //   });
+    //   return;
+    // }
+    const cekSeat = await seatModel.cekSeat(dataSeat);
+    // console.log(cekSeat);
+    if (dataSeat.length > cekSeat.length) {
+      res.status(400).json({
+        msg: "seat not found please cek again",
       });
-      return;
     }
-    const cekSeatResult = await seatModel.cekSeat(dataSeat);
-    if (cekSeatResult.length === 0) {
+    const cekStatusSeat = await seatModel.cekStatusSeat(dataSeat);
+    if (cekStatusSeat.length === 0) {
       res.status(404).json({
         msg: "Seat Not Found",
       });
       return;
     }
-    for (let i = 0; i < cekSeatResult.length; i++) {
-      const seat = cekSeatResult[i];
+    for (let i = 0; i < cekStatusSeat.length; i++) {
+      const seat = cekStatusSeat[i];
       if (seat.status === "Sold") {
         res.status(400).json({
           data: seat,
@@ -76,33 +68,43 @@ const orderSeat = async (req, res) => {
         return;
       }
     }
-    const result = await seatModel.orderSeat(dataArray);
+    // seat_id.forEach((seat) => {
+    //   dataArray.push({
+    //     id,
+    //     seat,
+    //     transaction_id: createTransaction[0].id,
+    //   });
+    // });
+    const createTransaction = await seatModel.createTransaction();
+    const dataInput = [];
+    dataArray.forEach((data) => {
+      dataInput.push({
+        id: data.id,
+        seat: data.seat,
+        transaction_id: createTransaction[0].id,
+      });
+    });
+    const result = await seatModel.orderSeat(dataInput);
     if (result.length === 0) {
       res.status(404).json({
-        msg: "Seat Not Found",
+        msg: "Order Failed",
       });
       return;
     }
     await client.query("COMMIT");
     const dataResult = [];
     result.rows.forEach((data) => {
-      const idx = dataResult.findIndex(
-        (item) => item.cinemas_id === data.cinemas_id
-      );
+      const idx = dataResult.findIndex((item) => item.user_id === data.user_id);
       if (idx >= 0) {
         dataResult[idx].seat_id.push(data.seat_id);
+        dataResult[idx].id.push(data.id);
       } else {
-        const formattedShowDate = moment(data.show_date, "YYYY-MM-DD").format(
-          "YYYY-MM-DD"
-        );
         dataResult.push({
-          cinemas_id: data.cinemas_id,
+          id: [data.id],
+          transaction_id: createTransaction[0].id,
           user_id: data.user_id,
           seat_id: [data.seat_id],
-          movie_id: parseInt(data.movie_id),
-          show_time: data.show_time,
-          show_date: formattedShowDate,
-          city_name: data.city_name,
+          payment_id: null,
           "created-at": data.created_at,
         });
       }
