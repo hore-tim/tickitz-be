@@ -16,6 +16,26 @@ const addShow = async (req, res) => {
   }
 };
 
+const getLocation = async (req, res) => {
+  try {
+    const { movie_id } = req.body;
+    const result = await showModel.getLocation(movie_id);
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        msg: "Location not found",
+      });
+    }
+    res.status(200).json({
+      data: result.rows,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+};
+
 const getAllShow = async (req, res) => {
   try {
     const { city_name, movie_id } = req.body;
@@ -103,4 +123,5 @@ module.exports = {
   editShow,
   getSingleShow,
   deleteShow,
+  getLocation,
 };

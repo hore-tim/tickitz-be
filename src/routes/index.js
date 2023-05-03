@@ -8,10 +8,10 @@ const profileRouter = require("./profile.route");
 const bookingRouter = require("./booking.route");
 const seatRouter = require("./seat.route");
 
-
 const transactionRouter = require("./transaction.route");
-const showRouter = require('./show.routes');
-const cinemasRouter = require('./cinemas.route')
+const showRouter = require("./show.routes");
+const cinemasRouter = require("./cinemas.route");
+const locationRouter = require("./location.route.js");
 
 masterRouter.use("/movies", moviesRouter);
 masterRouter.use("/", welcomeRouter);
@@ -22,5 +22,6 @@ masterRouter.use("/booking", bookingRouter);
 masterRouter.use("/seat", seatRouter);
 masterRouter.use("/transaction", transactionRouter);
 masterRouter.use("/cinemas", cinemasRouter);
+masterRouter.use("/location", locationRouter);
 
 module.exports = masterRouter;

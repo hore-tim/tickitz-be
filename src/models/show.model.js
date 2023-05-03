@@ -107,10 +107,30 @@ const deleteShow = (params) => {
     });
   });
 };
+
+const getLocation = (movie_id) => {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT city.name AS location
+    FROM movies
+    JOIN show ON movies.id::integer = show.movies_id::integer
+    JOIN cinemas ON show.cinemas_id::integer = cinemas.id::integer
+    JOIN city ON cinemas.city_id::integer = city.id::integer
+    WHERE movies.id::integer = $1::integer`;
+    db.query(sql, [parseInt(movie_id)], (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(result);
+    });
+  });
+};
+
 module.exports = {
   addShow,
   getAllShow,
   editShow,
   getSingleShow,
   deleteShow,
+  getLocation,
 };
