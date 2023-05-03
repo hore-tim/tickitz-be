@@ -50,7 +50,7 @@ GROUP BY
   });
 };
 
-const createTransaction = (payment_id, transacion_id) => {
+const createTransaction = (transacion_id, payment_id) => {
   return new Promise((resolve, reject) => {
     let sqlQuery = ` update "transaction" set payment_id = $1, status = 'paid' where id = $2 RETURNING *
     `;
