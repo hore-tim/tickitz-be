@@ -11,6 +11,23 @@ const getTransaction = async (req, res) => {
       });
       return;
     }
+    const dataResult = [];
+    result.rows.forEach((data) => {
+      const idx = dataResult.findIndex((item) => item.id === data.user_id);
+      if (idx >= 0) {
+        dataResult[idx].seat_id.push(data.seat_id);
+        dataResult[idx].id.push(data.id);
+      } else {
+        dataResult.push({
+          id: [data.id],
+          transaction_id: createTransaction[0].id,
+          user_id: data.user_id,
+          seat_id: [data.seat_id],
+          payment_id: null,
+          "created-at": data.created_at,
+        });
+      }
+    });
     res.status(200).json({
       data: result.rows,
     });
