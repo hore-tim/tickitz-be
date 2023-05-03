@@ -39,7 +39,7 @@ const getSingleShow = (params) => {
 
 const getAllShow = (city_name, movie_id) => {
   return new Promise((resolve, reject) => {
-    let sql = `  SELECT cb.image AS cinema_brand_image, c.address, cb.name AS cinema_title, c.address AS cinema_address, 
+    let sql = `  SELECT s.id, cb.image AS cinema_brand_image, c.address, cb.name AS cinema_title, c.address AS cinema_address, 
         s.showtime AS cinema_showtime, s.showdate as cinema_showdate, s.price
         FROM show s
         JOIN cinemas c ON s.cinemas_id = c.id
