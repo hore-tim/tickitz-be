@@ -45,7 +45,7 @@ const getAllShow = (city_name, movie_id) => {
         JOIN cinemas c ON s.cinemas_id = c.id
         JOIN city ct ON c.city_id = ct.id
         JOIN cinemasbrand cb ON c.cinemas_brand_id = cb.id
-        WHERE ct.name = $1 and s.movies_id = $2::integer
+        WHERE ct.name ILIKE $1::varchar and s.movies_id = $2::integer
             `;
     const values = [city_name, movie_id];
     db.query(sql, values, (err, result) => {
