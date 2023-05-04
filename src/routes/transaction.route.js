@@ -5,7 +5,7 @@ const transactionController = require("../controllers/transaction.controller");
 const authMiddleware = require("../middleware/auth");
 
 transactionRoute.get(
-  "/",
+  "/:transaction_id",
   authMiddleware.checkToken,
   transactionController.getTransaction
 );
@@ -21,6 +21,11 @@ transactionRoute.get(
 );
 transactionRoute.get(
   "/all",
+  authMiddleware.checkToken,
+  transactionController.getAllTransaction
+);
+transactionRoute.get(
+  "/",
   authMiddleware.checkToken,
   transactionController.getAllTransaction
 );
