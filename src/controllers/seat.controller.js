@@ -3,7 +3,8 @@ const db = require("../configs/supabase");
 const moment = require("moment");
 const getSeat = async (req, res) => {
   try {
-    const { show_id } = req.body;
+    // const { show_id } = req.body;
+    const { show_id } = req.params;
     const result = await seatModel.getSeat(show_id);
     if (result.rows.length === 0) {
       res.status(404).json({
@@ -11,8 +12,21 @@ const getSeat = async (req, res) => {
       });
       return;
     }
+    const combinedObject = {
+      title: result.rows[0].title,
+      cinema_brand_name: result.rows[0].cinema_brand_name,
+      cinema_image: result.rows[0].cinema_image,
+      show_time: result.rows[0].show_time,
+      show_date: result.rows[0].show_date,
+      details: result.rows.map(({ seat_id, seat, price, status_order }) => ({
+        seat_id,
+        seat,
+        price,
+        status_order,
+      })),
+    };
     res.status(200).json({
-      data: result.rows,
+      data: combinedObject,
     });
   } catch (error) {
     console.log(error.message);

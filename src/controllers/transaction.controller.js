@@ -3,7 +3,7 @@ const db = require("../configs/supabase");
 const moment = require("moment");
 const getTransaction = async (req, res) => {
   try {
-    const { transaction_id } = req.body;
+    const { transaction_id } = req.params;
     const result = await transactionModel.getTransaction(transaction_id);
     if (result.rows.length === 0) {
       res.status(404).json({
@@ -13,12 +13,12 @@ const getTransaction = async (req, res) => {
     }
     const dataResult = [];
     // return console.log(result.rows);
+    // console.log(result.rows);
     result.rows.forEach((data) => {
       const idx = dataResult.findIndex(
         (item) => item.reservation_id === item.reservation_id
       );
       if (idx >= 0) {
-        console.log(dataResult[idx]);
         dataResult[idx].seats.push({ seat: data.seats, price: data.price });
       } else {
         dataResult.push({
@@ -64,8 +64,11 @@ const createTransaction = async (req, res) => {
       });
       return;
     }
+    const statusOrder = await transactionModel.updateStatusOrder(
+      transaction_id
+    );
     res.status(200).json({
-      data: result.rows,
+      data: statusOrder.rows,
     });
   } catch (error) {
     console.log(error.message);
@@ -95,8 +98,42 @@ const getPayment = async (req, res) => {
   }
 };
 
+const getAllTransaction = async (req, res) => {
+  try {
+    const { id } = req.authInfo;
+    const result = await transactionModel.getAllTransaction(id);
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        msg: "transaction not found",
+      });
+      return;
+    }
+    const dataResult = Object.values(
+      result.rows.reduce((acc, obj) => {
+        const key = obj.transaction_id;
+        const { seats, ...rest } = obj;
+        if (!acc[key]) {
+          acc[key] = { ...rest, seats: [seats] };
+        } else {
+          acc[key].seats.push(seats);
+        }
+        return acc;
+      }, {})
+    );
+    res.status(200).json({
+      data: dataResult,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      msg: "Internal server error",
+    });
+  }
+};
+
 module.exports = {
   getTransaction,
   createTransaction,
   getPayment,
+  getAllTransaction,
 };

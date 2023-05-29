@@ -13,7 +13,7 @@ const getTransaction = (transacion_id) => {
   movies.category AS movie_category,
   reservation.id as reservation_id,
   seat_rows_number.name AS seats,
-  show.prices AS price,
+  show.price AS price,
   transaction.status as status 
 FROM 
   reservation 
@@ -36,7 +36,7 @@ GROUP BY
   reservation.id,
   movies.category, 
   seat_rows_number.name, 
-  show.prices,
+  show.price,
  transaction.status
     `;
     const values = [transacion_id];
@@ -94,9 +94,66 @@ const getPayment = () => {
   });
 };
 
+const getAllTransaction = (id) => {
+  return new Promise((resolve, reject) => {
+    let sqlQuery = ` SELECT
+  t.id as transaction_id,
+  r.id as reservation_id,
+  sh.showtime AS show_time, 
+  TO_CHAR(sh.showdate, 'YYYY-MM-DD') AS show_date, 
+  m.title AS movie_title, 
+  cb.name AS cinemas_brand_name, 
+  cb.image AS cinemas_brand_image, 
+  m.category AS movie_category, 
+  sn.name AS seats, 
+  sh.price AS price, 
+  t.status AS transaction_status 
+FROM 
+  transaction t 
+  JOIN reservation r ON r.transaction_id = t.id 
+  JOIN seat s ON s.id = r.seat_id 
+  JOIN show sh ON sh.id = s.show_id 
+  JOIN movies m ON m.id = sh.movies_id 
+  JOIN cinemas c ON c.id = sh.cinemas_id 
+  JOIN cinemasbrand cb ON cb.id = c.cinemas_brand_id 
+  JOIN seat_rows_number sn ON sn.id = s.id_seat_rows_number 
+WHERE 
+  r.user_id = $1;
+    `;
+    db.query(sqlQuery, [id], (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(result);
+    });
+  });
+};
+
+const updateStatusOrder = (transacion_id) => {
+  return new Promise((resolve, reject) => {
+    let sqlQuery = `UPDATE seat
+    SET order_status_id = 2
+    FROM reservation
+    JOIN transaction ON reservation.transaction_id = transaction.id
+    WHERE reservation.seat_id = seat.id
+    AND transaction.id = $1 RETURNING *
+    `;
+    db.query(sqlQuery, [transacion_id], (err, result) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(result);
+    });
+  });
+};
+
 module.exports = {
   getTransaction,
   createTransaction,
   cekPayment,
   getPayment,
+  updateStatusOrder,
+  getAllTransaction,
 };
