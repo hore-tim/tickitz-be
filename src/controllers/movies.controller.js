@@ -2,6 +2,7 @@ const moviesModel = require('../models/movies.model')
 const { uploaderMovies } = require("../utils/cloudinary");
 const db = require("../configs/supabase");
 
+
 const addMovies = async (req, res) => {
     try {
         const { body } = req;
@@ -38,9 +39,10 @@ const getAllMovies = async (req, res) => {
                 msg: "Data not found"
             });
         }
+        const newData = result.rows.filter((d, i, arr) => i === arr.findIndex(v => v.id === d.id))
         const meta = await moviesModel.getMetaMovies(query);
         res.status(200).json({
-            data: result.rows,
+            data: newData,
             meta,
             msg: "Get movies data"
         })
