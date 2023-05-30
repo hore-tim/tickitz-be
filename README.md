@@ -73,6 +73,14 @@ Technologies used in the project:
 *   [PostgreSQL](https://www.postgresql.org/)
 *   [JWT](https://github.com/auth0/express-jwt)
 
+<h2>👨‍💻 Contributors</h2>
+
+*   [M. Pria Admaja](https://github.com/priaadmaja) - Project manager & full-stack developer
+*   [Redha Definto](https://github.com/redhadefinto) - Back-end developer
+*   [Damar Anggoro](https://github.com/marrdamar) - Back-end developer
+*   [Yanu Setiawan](https://github.com/yanu-setiawan) - Front-end developer
+*   [Akmal Susetio](https://github.com/wyakaga) - Front-end developer
+
 <h2>🛡️ License:</h2>
 
 This project is licensed under the ISC license
