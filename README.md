@@ -76,8 +76,8 @@ Technologies used in the project:
 <h2>👨‍💻 Contributors</h2>
 
 *   [M. Pria Admaja](https://github.com/priaadmaja) - Project manager & full-stack developer
+*   [Damar Anggoro](https://github.com/marrdamar) - Full-stack developer
 *   [Redha Definto](https://github.com/redhadefinto) - Back-end developer
-*   [Damar Anggoro](https://github.com/marrdamar) - Back-end developer
 *   [Yanu Setiawan](https://github.com/yanu-setiawan) - Front-end developer
 *   [Akmal Susetio](https://github.com/wyakaga) - Front-end developer
 
