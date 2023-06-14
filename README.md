@@ -1,12 +1,16 @@
 <h1 id="title" align="center">Tickitz Back End</h1>
 
-<p align="center"><img src="https://socialify.git.ci/hore-tim/tickitz-be/image?description=1&amp;descriptionEditable=A%20repository%20for%20Tickitz%20API&amp;forks=1&amp;language=1&amp;name=1&amp;owner=1&amp;theme=Dark" alt="project-image"></p>
+A repository for Tickitz API.
 
-A repository for Tickitz API. You can also view the front end part [here](https://github.com/hore-tim/tickitz-fe)
+<h2>💻 Built with</h2>
 
-<h2>🚀 Demo</h2>
+Technologies used in the project:
 
-You can click it [here!](https://tickitz-be.vercel.app/)
+*   [NodeJS](https://nodejs.org/)
+*   [ExpressJS](https://expressjs.com/)
+*   [PostgreSQL](https://www.postgresql.org/)
+*   [JWT](https://github.com/auth0/express-jwt)
+*   [Nodemailer](https://nodemailer.com/)
 
 <h2>🛠️ Installation Steps:</h2>
 
@@ -56,6 +60,10 @@ CLOUD_SECRET = [YOUR CLOUDINARY SECRET]
 npm run dev
 ```
 
+<h2>🚀 Demo</h2>
+
+You can click it [here!](https://tickitz-be.vercel.app/)
+
 <h2>📫 Postman Documentation</h2>
 
 You can click it [here](https://documenter.getpostman.com/view/26776035/2s93m8xf4j)
@@ -63,15 +71,6 @@ You can click it [here](https://documenter.getpostman.com/view/26776035/2s93m8xf
 <h2>Database Structure</h2>
 
 You can click it [here](https://dbdiagram.io/d/644d3f5edca9fb07c4408259)
-
-<h2>💻 Built with</h2>
-
-Technologies used in the project:
-
-*   [NodeJS](https://nodejs.org/)
-*   [ExpressJS](https://expressjs.com/)
-*   [PostgreSQL](https://www.postgresql.org/)
-*   [JWT](https://github.com/auth0/express-jwt)
 
 <h2>👨‍💻 Contributors</h2>
 
@@ -84,3 +83,7 @@ Technologies used in the project:
 <h2>🛡️ License:</h2>
 
 This project is licensed under the ISC license
+
+<h2>Related Projects</h2>
+
+* [tickitz-fe](https://github.com/hore-tim/tickitz-fe) - front-end
