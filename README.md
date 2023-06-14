@@ -17,7 +17,7 @@ Technologies used in the project:
 <p>1. Clone this repository</p>
 
 ```bash
-git clone https://github.com/hore-tim/tickitz-be
+git clone https://github.com/hore-tim/tickitz-be.git
 ```
 
 <p>2. Enter folder directory</p>

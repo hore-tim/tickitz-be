@@ -27,7 +27,7 @@ const addMovies = (data) => {
 const getAllMovies = (query) => {
   return new Promise((resolve, reject) => {
     let sql = `select m.id, m.title, m.image as movies_image, m.synopsis, m.duration, m.release_date, m.duration, m.director, m.casts, m.synopsis, m.seller_id, s.showdate, s.showtime 
-        from movies m left join show s on s.movies_id = m.id  `;
+        from movies m left join show s on s.movies_id = m.id `;
     if (query.show && query.show === "now") {
       sql += `where date_trunc('month', s.showdate) = date_trunc('month', current_date) `;
     }
@@ -81,7 +81,6 @@ const getAllMovies = (query) => {
       sql += `limit $1 offset $2`;
       values = [limit, offset];
     }
-
     supabase.query(sql, values, (err, result) => {
       if (err) {
         return reject(err);
