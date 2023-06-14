@@ -1,17 +1,16 @@
 <h1 id="title" align="center">Tickitz Back End</h1>
 
-
 Tickitz is a user-friendly web application that simplifies the process of booking and purchasing movie tickets online. Users can search for movies showing in nearby theatres, select their preferred seats, and make secure payments using various methods. With Tickitz, users can enjoy an effortless and enjoyable movie-watching experience.
 
 <h2>💻 Built with</h2>
 
 Technologies used in the project:
 
-*   [NodeJS](https://nodejs.org/)
-*   [ExpressJS](https://expressjs.com/)
-*   [PostgreSQL](https://www.postgresql.org/)
-*   [JWT](https://github.com/auth0/express-jwt)
-*   [Nodemailer](https://nodemailer.com/)
+- [NodeJS](https://nodejs.org/)
+- [ExpressJS](https://expressjs.com/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [JWT](https://github.com/auth0/express-jwt)
+- [Nodemailer](https://nodemailer.com/)
 
 <h2>🛠️ Installation Steps:</h2>
 
@@ -75,41 +74,45 @@ You can click it [here](https://dbdiagram.io/d/644d3f5edca9fb07c4408259)
 
 ## 𓆙 Route
 
-| Endpoint             |    Method    | Info         | Remark                               |
-| -------------------- | :----------: | :----------- | :----------------------------------- |
-| /auth                |    `POST`    | Auth         | Login                                |
-| /auth/logout         |   `PATCH`    | Auth         | LOGOUT                               |
-| /auth/register       |    `POST`    | Auth         | Register                             |
-| /auth                |   `PATCH`    | User         | Change Password                      |
-| /auth/otp            |   `PATCH`    | User         | get otp                              |
-| /auth/forgot         |   `PATCH`    | User         | fotgot password                      |
-| /transactions/admin  |    `GET`     | Transactions | History transactios all users(admin) |
-| /transactions        |    `GET`     | Transactions | History Transaction                  |
-| /transactions        |    `POST`    | Transactions | Create Transaction                   |
-| /transactions        |   `DELETE`   | Transactions | Delete Transaction                   |
-| /transactions        |   `PATCH`    | Transactions | status Transaction done (admin)      |
-| /products            | `POST` `GET` | Products     | Create and See Products              |
-| /products/promo      |    `POST`    | Products     | Create product with prom             |
-| /products/:id        |    `GET`     | Products     | Get detail product                   |
-| /products/promo/:id  |    `GET`     | Products     | Get detail product With promo        |
-| /products/:productId |   `PATCH`    | Products     | Edit product                         |
-| /products/promo/:id  |   `PATCH`    | Products     | Edit product with promo              |
-| /products/:id        |   `DELETE`   | Products     | Delete product                       |
-| /promo               |    `GET`     | Promo        | Get all Promo                        |
-| /promo/:id           |    `GET`     | Promo        | Get Detail promo                     |
-| /promo               |    `POST`    | Promo        | Create promo                         |
-| /promo/:id           |   `PATCH`    | Promo        | Edit Promo                           |
-| /promo/:id           |   `DELETE`   | Promo        | Delete Promo                         |
-| /profile             |    `GET`     | Profile      | Get Profile                          |
-| /profile             |   `PATCH`    | Profile      | Edit Profile                         |
+| Endpoint                       |  Method  | Info         | Remark                     |
+| ------------------------------ | :------: | :----------- | :------------------------- |
+| /auth/register                 |  `POST`  | Auth         | Register                   |
+| /auth/verify                   | `PATCH`  | User         | verify email               |
+| /auth                          |  `POST`  | Auth         | Login                      |
+| /auth                          | `PATCH`  | User         | Change Password            |
+| /auth/otp                      | `PATCH`  | User         | get otp                    |
+| /auth/forgot                   | `PATCH`  | User         | fotgot password            |
+| /auth/reset-password/          | `PATCH`  | User         | Reset password             |
+| /auth/logout                   | `PATCH`  | Auth         | LOGOUT                     |
+| /transactions                  |  `GET`   | Transactions | Get All Transaction (user) |
+| /transaction/:transaction_id   |  `GET`   | Transactions | History transactios by id  |
+| /transaction/payment           |  `GET`   | Transactions | Get Transaction Payment    |
+| /transactions                  | `PATCH`  | Transactions | Create Transaction         |
+| /movies                        |  `GET`   | Movie        | See Movie                  |
+| /movies/:id                    |  `Get`   | Movie        | Get Detail Movie           |
+| /movies/:id                    | `PATCH`  | Movie        | Edit Movie                 |
+| /movies                        |  `POST`  | Movie        | Add New Movie              |
+| /movies/:id                    | `DELETE` | Movie        | Delete Movie               |
+| /profile                       |  `GET`   | Profile      | Get Profile                |
+| /profile                       | `PATCH`  | Profile      | Edit Profile               |
+| /profile/image                 | `PATCH`  | Profile      | Edit Profile Image         |
+| /profile/poin                  | `PATCH`  | Profile      | update poin                |
+| /profile/delete-image          | `PATCH`  | Profile      | Delete Image               |
+| /seat/all/:show_id             |  `GET`   | Seat         | Show Seat                  |
+| /show?city_name=""?movie_id="" |  `GET`   | Show         | Get Show                   |
+| /show                          |  `POST`  | Show         | Add Show                   |
+| /show/:id                      |  `GET`   | Show         | Get Single Show            |
+| /show/:id                      | `PATCH`  | Show         | Edit Show                  |
+| /show/:id                      | `DELETE` | Show         | Delete Show                |
+| /location/:movie_id            |  `GET`   | Location     | Get Location               |
 
 <h2>👨‍💻 Contributors</h2>
 
-*   [M. Pria Admaja](https://github.com/priaadmaja) - Project manager & full-stack developer
-*   [Damar Anggoro](https://github.com/marrdamar) - Full-stack developer
-*   [Redha Definto](https://github.com/redhadefinto) - Back-end developer
-*   [Yanu Setiawan](https://github.com/yanu-setiawan) - Front-end developer
-*   [Akmal Susetio](https://github.com/wyakaga) - Front-end developer
+- [M. Pria Admaja](https://github.com/priaadmaja) - Project manager & full-stack developer
+- [Damar Anggoro](https://github.com/marrdamar) - Full-stack developer
+- [Redha Definto](https://github.com/redhadefinto) - Back-end developer
+- [Yanu Setiawan](https://github.com/yanu-setiawan) - Front-end developer
+- [Akmal Susetio](https://github.com/wyakaga) - Front-end developer
 
 <h2>🛡️ License:</h2>
 
@@ -117,4 +120,4 @@ This project is licensed under the ISC license
 
 <h2>Related Projects</h2>
 
-* [tickitz-fe](https://github.com/hore-tim/tickitz-fe) - front-end
+- [tickitz-fe](https://github.com/hore-tim/tickitz-fe) - front-end
