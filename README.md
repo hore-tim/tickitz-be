@@ -1,8 +1,6 @@
 <h1 id="title" align="center">Tickitz Back End</h1>
 
-<p align="center"><img src="https://socialify.git.ci/hore-tim/tickitz-be/image?description=1&amp;descriptionEditable=A%20repository%20for%20Tickitz%20API&amp;forks=1&amp;language=1&amp;name=1&amp;owner=1&amp;theme=Dark" alt="project-image"></p>
-
-A repository for Tickitz API. You can also view the front end part [here](https://github.com/hore-tim/tickitz-fe)
+A repository for Tickitz API.
 
 <h2>💻 Built with</h2>
 
@@ -12,13 +10,14 @@ Technologies used in the project:
 *   [ExpressJS](https://expressjs.com/)
 *   [PostgreSQL](https://www.postgresql.org/)
 *   [JWT](https://github.com/auth0/express-jwt)
+*   [Nodemailer](https://nodemailer.com/)
 
 <h2>🛠️ Installation Steps:</h2>
 
 <p>1. Clone this repository</p>
 
 ```bash
-git clone https://github.com/hore-tim/tickitz-be
+git clone https://github.com/hore-tim/tickitz-be.git
 ```
 
 <p>2. Enter folder directory</p>
@@ -60,6 +59,7 @@ CLOUD_SECRET = [YOUR CLOUDINARY SECRET]
 ```bash
 npm run dev
 ```
+
 <h2>🚀 Demo</h2>
 
 You can click it [here!](https://tickitz-be.vercel.app/)
@@ -76,10 +76,14 @@ You can click it [here](https://dbdiagram.io/d/644d3f5edca9fb07c4408259)
 
 *   [M. Pria Admaja](https://github.com/priaadmaja) - Project manager & full-stack developer
 *   [Damar Anggoro](https://github.com/marrdamar) - Full-stack developer
-*   [Redha Definto](https://github/redhadefinto) - Back-end developer
+*   [Redha Definto](https://github.com/redhadefinto) - Back-end developer
 *   [Yanu Setiawan](https://github.com/yanu-setiawan) - Front-end developer
 *   [Akmal Susetio](https://github.com/wyakaga) - Front-end developer
 
 <h2>🛡️ License:</h2>
 
 This project is licensed under the ISC license
+
+<h2>Related Projects</h2>
+
+* [tickitz-fe](https://github.com/hore-tim/tickitz-fe) - front-end
