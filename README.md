@@ -1,6 +1,7 @@
 <h1 id="title" align="center">Tickitz Back End</h1>
 
-A repository for Tickitz API.
+
+Tickitz is a user-friendly web application that simplifies the process of booking and purchasing movie tickets online. Users can search for movies showing in nearby theatres, select their preferred seats, and make secure payments using various methods. With Tickitz, users can enjoy an effortless and enjoyable movie-watching experience.
 
 <h2>💻 Built with</h2>
 
@@ -71,6 +72,36 @@ You can click it [here](https://documenter.getpostman.com/view/26776035/2s93m8xf
 <h2>Database Structure</h2>
 
 You can click it [here](https://dbdiagram.io/d/644d3f5edca9fb07c4408259)
+
+## 𓆙 Route
+
+| Endpoint             |    Method    | Info         | Remark                               |
+| -------------------- | :----------: | :----------- | :----------------------------------- |
+| /auth                |    `POST`    | Auth         | Login                                |
+| /auth/logout         |   `PATCH`    | Auth         | LOGOUT                               |
+| /auth/register       |    `POST`    | Auth         | Register                             |
+| /auth                |   `PATCH`    | User         | Change Password                      |
+| /auth/otp            |   `PATCH`    | User         | get otp                              |
+| /auth/forgot         |   `PATCH`    | User         | fotgot password                      |
+| /transactions/admin  |    `GET`     | Transactions | History transactios all users(admin) |
+| /transactions        |    `GET`     | Transactions | History Transaction                  |
+| /transactions        |    `POST`    | Transactions | Create Transaction                   |
+| /transactions        |   `DELETE`   | Transactions | Delete Transaction                   |
+| /transactions        |   `PATCH`    | Transactions | status Transaction done (admin)      |
+| /products            | `POST` `GET` | Products     | Create and See Products              |
+| /products/promo      |    `POST`    | Products     | Create product with prom             |
+| /products/:id        |    `GET`     | Products     | Get detail product                   |
+| /products/promo/:id  |    `GET`     | Products     | Get detail product With promo        |
+| /products/:productId |   `PATCH`    | Products     | Edit product                         |
+| /products/promo/:id  |   `PATCH`    | Products     | Edit product with promo              |
+| /products/:id        |   `DELETE`   | Products     | Delete product                       |
+| /promo               |    `GET`     | Promo        | Get all Promo                        |
+| /promo/:id           |    `GET`     | Promo        | Get Detail promo                     |
+| /promo               |    `POST`    | Promo        | Create promo                         |
+| /promo/:id           |   `PATCH`    | Promo        | Edit Promo                           |
+| /promo/:id           |   `DELETE`   | Promo        | Delete Promo                         |
+| /profile             |    `GET`     | Profile      | Get Profile                          |
+| /profile             |   `PATCH`    | Profile      | Edit Profile                         |
 
 <h2>👨‍💻 Contributors</h2>
 
